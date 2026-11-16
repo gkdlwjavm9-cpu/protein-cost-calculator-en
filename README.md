@@ -1,5 +1,7 @@
 # Protein Cost Per Gram Calculator
 
+> **Live:** https://gkdlwjavm9-cpu.github.io/protein-cost-calculator-en/
+
 A single-file web tool (`index.html`) that answers one question: **which groceries are actually cheap protein?**
 
 Enter a price, a package weight, the protein per 100 g and the calories, and it ranks everything you entered by:
