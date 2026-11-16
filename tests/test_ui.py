@@ -132,26 +132,30 @@ def main():
     ctx = build_ctx()
     src = open(HTML, encoding="utf-8").read()
 
-    # --- first paint: empty state, no crash ---
-    check("boots with 0 rows", js(ctx, "document.querySelector('#tbody').children.length"), 0)
-    check("empty message visible", js(ctx, "document.querySelector('#empty').style.display"), "block")
-    check("empty stats shown", "0" in ctx.eval("document.querySelector('#stats').innerHTML"), True)
+    # --- first paint: a cold visit starts with the 26 presets, nothing blank ---
+    check("first visit shows 26 rows", js(ctx, "document.querySelector('#tbody').children.length"), 26)
+    check("empty message hidden on first visit", js(ctx, "document.querySelector('#empty').style.display"), "none")
+    contains("stats computed on first paint", ctx.eval("document.querySelector('#stats').innerHTML"), "Lentils, dry")
     check("target input shows default", js(ctx, "document.querySelector('#f-target').value"), 150)
+    check("first visit persisted", js(ctx, "JSON.parse(localStorage.getItem('protein-cost-calc-en-v1')).items.length"), 26)
 
-    # --- preset load ---
+    # --- preset button is idempotent ---
     check("preset button bound", js(ctx, "document.querySelector('#load-preset').handlers.click.length"), 1)
     ctx.eval("document.querySelector('#load-preset').fire('click')")
-    check("26 presets in table", js(ctx, "document.querySelector('#tbody').children.length"), 26)
-    check("empty message hidden", js(ctx, "document.querySelector('#empty').style.display"), "none")
-    check("state holds 26 items", js(ctx, "state.items.length"), 26)
-    check("saved to localStorage", js(ctx, "JSON.parse(localStorage.getItem('protein-cost-calc-en-v1')).items.length"), 26)
+    check("preset click adds no duplicates", js(ctx, "state.items.length"), 26)
+    contains("duplicate load explained", ctx.eval("document.querySelector('#toast').textContent"), "already in the list")
     contains("cheapest row is lentils first", first_row(ctx), "Lentils")
     contains("best pill on the cheapest row", first_row(ctx), 'class="pill">best')
-    contains("stats name the cheapest", ctx.eval("document.querySelector('#stats').innerHTML"), "Lentils, dry")
     contains("stats show daily cost", ctx.eval("document.querySelector('#stats').innerHTML"), "/ day")
+
+    # --- clear, then load presets from scratch ---
+    ctx.eval("document.querySelector('#clear-all').fire('click')")
+    check("clear empties the list", js(ctx, "state.items.length"), 0)
+    check("empty message reappears", js(ctx, "document.querySelector('#empty').style.display"), "block")
+    check("empty state saved", js(ctx, "JSON.parse(localStorage.getItem('protein-cost-calc-en-v1')).items.length"), 0)
     ctx.eval("document.querySelector('#load-preset').fire('click')")
-    check("second preset load adds nothing", js(ctx, "state.items.length"), 26)
-    contains("second load explained", ctx.eval("document.querySelector('#toast').textContent"), "already in the list")
+    check("presets reload after clearing", js(ctx, "state.items.length"), 26)
+    check("table refilled", js(ctx, "document.querySelector('#tbody').children.length"), 26)
 
     # --- sorting ---
     ctx.eval("__thEls[1].fire('click')")           # price

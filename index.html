@@ -577,7 +577,7 @@ function save() {
 function load() {
   try {
     var raw = localStorage.getItem(STORE_KEY);
-    if (!raw) return;
+    if (!raw) return false;
     var data = JSON.parse(raw);
     if (Array.isArray(data.items)) {
       state.items = data.items.filter(function (it) { return it && typeof it === "object" && it.name; });
@@ -586,7 +586,18 @@ function load() {
     if (data.displayUnit === "lb" || data.displayUnit === "oz" || data.displayUnit === "100g") {
       state.displayUnit = data.displayUnit;
     }
-  } catch (e) { /* ignore corrupted storage */ }
+    return true;
+  } catch (e) { return false; }
+}
+
+/* Starter rows as independent copies, so editing one never mutates PRESETS. */
+function makePresetItems() {
+  return PRESETS.map(function (p) {
+    return {
+      name: p.name, price: p.price, size: p.size, unit: p.unit,
+      protein: p.protein, basis: "100g", kcal: p.kcal, preset: true
+    };
+  });
 }
 
 /* ---------- target chips + unit chips ---------- */
@@ -761,14 +772,8 @@ $("#load-preset").addEventListener("click", function () {
   var existing = {};
   state.items.forEach(function (it) { existing[String(it.name).toLowerCase()] = true; });
   var added = 0;
-  PRESETS.forEach(function (p) {
-    if (!existing[String(p.name).toLowerCase()]) {
-      state.items.push({
-        name: p.name, price: p.price, size: p.size, unit: p.unit,
-        protein: p.protein, basis: "100g", kcal: p.kcal, preset: true
-      });
-      added++;
-    }
+  makePresetItems().forEach(function (p) {
+    if (!existing[String(p.name).toLowerCase()]) { state.items.push(p); added++; }
   });
   save(); render();
   toast(added ? added + " presets loaded (" + state.items.length + " foods)" : "All presets are already in the list");
@@ -814,7 +819,12 @@ function fallbackCopy(text, done) {
 })();
 
 /* ---------- boot ---------- */
-load();
+/* A first visit starts with the 26 presets so the comparison is never blank;
+   once the browser has any saved state (including an emptied list) we leave it alone. */
+if (!load()) {
+  state.items = makePresetItems();
+  save();
+}
 $("#f-target").value = state.target;
 renderChips();
 syncProteinFields();

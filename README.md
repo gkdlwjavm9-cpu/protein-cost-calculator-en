@@ -38,7 +38,7 @@ Korean edition: [protein-cost-calculator](https://github.com/gkdlwjavm9-cpu/prot
 ```bash
 pip install quickjs                       # once
 python3 tests/test_tool.py                # 79 math checks: units, per-serving labels, ranking, summary, formatting
-python3 tests/test_ui.py                  # 60 UI checks: presets, sorting, add/remove, target, unit toggle, storage, CTA
+python3 tests/test_ui.py                  # 61 UI checks: presets, sorting, add/remove, target, unit toggle, storage, CTA
 bash deploy.sh                            # (re)deploy to GitHub Pages and wait for HTTP 200
 ```
 
