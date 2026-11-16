@@ -32,3 +32,16 @@ GitHub Pages: Settings → Pages → Deploy from a branch → `main` / `(root)`.
 The site is published at `https://<user>.github.io/protein-cost-calculator-en/`.
 
 Korean edition: [protein-cost-calculator](https://github.com/gkdlwjavm9-cpu/protein-cost-calculator)
+
+## Checks and maintenance
+
+```bash
+pip install quickjs                       # once
+python3 tests/test_tool.py                # 79 math checks: units, per-serving labels, ranking, summary, formatting
+python3 tests/test_ui.py                  # 60 UI checks: presets, sorting, add/remove, target, unit toggle, storage, CTA
+bash deploy.sh                            # (re)deploy to GitHub Pages and wait for HTTP 200
+```
+
+- `GUMROAD_URL` at the top of the inline script: set it to the live product URL to make the CTA a checkout link, or to `""` to show a "coming soon" toast instead.
+- Two `.adslot` placeholders hold the ad space — paste the AdSense unit inside them after approval.
+- `PRESETS` is the starter list: `{name, price, size, unit, protein, kcal}`, USD with protein and kcal per 100 g.

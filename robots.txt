@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gkdlwjavm9-cpu.github.io/protein-cost-calculator-en/sitemap.xml
