@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Protein Cost Per Gram &amp; Daily Target Calculator — which groceries are actually cheap protein?</title>
+<meta name="description" content="Enter a price, a package size and the protein on the label and this free calculator ranks your groceries by cost per gram of protein, shows the cost of hitting your daily protein target, and totals it per week and month. 26 US grocery presets, no sign-up.">
+<meta name="keywords" content="cost per gram of protein, protein per dollar, cheap protein foods, high protein grocery list, protein calculator, daily protein target, meal prep cost, budget bulking">
+<meta name="author" content="High-Protein Meal-Prep Cost Calculator">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="Protein Cost Per Gram &amp; Daily Target Calculator">
+<meta property="og:description" content="Rank your groceries by cost per gram of protein, then see what your daily protein target actually costs per week and month.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%231f7a63'/%3E%3Ctext x='50' y='68' font-size='52' font-family='system-ui,sans-serif' font-weight='700' fill='%23fff' text-anchor='middle'%3E%24%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --ink:#16232e; --ink-soft:#5b6b78; --line:#dfe6ec; --bg:#f5f7f9; --card:#fff;
+    --brand:#1f7a63; --brand-2:#155e4c; --brand-soft:#e7f4ef; --warn:#b3261e; --gold:#8a5a00;
+    --cta-ink:#0d2b23; --cta-bg1:#e9f7f0; --cta-bg2:#f4fbff;
+    --shadow:0 1px 2px rgba(16,35,46,.06), 0 8px 24px rgba(16,35,46,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{--ink:#e9eef2;--ink-soft:#9fb0bd;--line:#2a3a46;--bg:#0f171d;--card:#16222b;
+          --brand:#5ed3b2;--brand-2:#7fe3c6;--brand-soft:#15332c;--gold:#e0b062;
+          --cta-ink:#e9eef2;--cta-bg1:#152a24;--cta-bg2:#132630;
+          --shadow:0 1px 2px rgba(0,0,0,.4);}
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+       line-height:1.55}
+  header.hero{padding:34px 20px 20px;max-width:1060px;margin:0 auto}
+  .badge{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+       color:var(--brand);background:var(--brand-soft);border-radius:999px;padding:4px 10px;margin-bottom:12px}
+  h1{font-size:clamp(1.55rem,4.2vw,2.15rem);margin:0 0 10px;letter-spacing:-.02em;line-height:1.2}
+  .lede{margin:0;color:var(--ink-soft);font-size:.97rem;max-width:70ch}
+  .lede strong{color:var(--ink)}
+  main{max-width:1060px;margin:0 auto;padding:0 20px 56px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow);margin-bottom:16px}
+  .card h2{font-size:1.02rem;margin:0 0 4px;display:flex;align-items:center;gap:8px}
+  .card h2 .num{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;
+       background:var(--brand);color:#fff;font-size:.75rem;font-weight:700;flex:none}
+  .card .sub{margin:0 0 14px;color:var(--ink-soft);font-size:.84rem}
+  .grid{display:grid;grid-template-columns:1.7fr .8fr 1fr .8fr 1fr;gap:10px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr 1fr}}
+  @media (max-width:520px){.grid{grid-template-columns:1fr}}
+  .field{display:flex;flex-direction:column}
+  label,.lbl{display:block;font-size:.72rem;font-weight:700;color:var(--ink-soft);margin-bottom:4px;
+       letter-spacing:.01em;text-transform:uppercase}
+  input[type=text],input[type=number],select{
+       width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:9px;
+       background:var(--bg);color:var(--ink);font-size:.95rem;font-variant-numeric:tabular-nums;
+       font-family:inherit;min-height:42px}
+  select{cursor:pointer}
+  input:focus,select:focus{outline:2px solid var(--brand);outline-offset:1px}
+  .unitpair{display:flex;gap:6px}
+  .unitpair input{flex:1 1 auto;min-width:0}
+  .unitpair select{flex:0 0 84px;width:84px}
+  .unitpair select.narrow{flex:0 0 70px;width:70px}
+  .row-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;align-items:center}
+  button{font:inherit;cursor:pointer;border-radius:9px;border:1px solid var(--line);background:var(--card);
+       color:var(--ink);padding:9px 14px;font-size:.9rem;transition:border-color .12s,background .12s}
+  button:hover{border-color:var(--brand)}
+  button.primary{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:700}
+  button.primary:hover{background:var(--brand-2);border-color:var(--brand-2)}
+  button.ghost{background:transparent;color:var(--ink-soft)}
+  button.tiny{padding:3px 7px;font-size:.76rem;border-radius:7px;line-height:1.4}
+  .hint{font-size:.78rem;color:var(--ink-soft);margin:12px 0 0}
+  .hint code,.cta code{background:var(--brand-soft);color:var(--ink);border-radius:5px;padding:1px 5px;font-size:.85em}
+  .target-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+  .target-bar input{max-width:120px}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chips button{padding:5px 10px;font-size:.8rem;border-radius:999px}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px}
+  .stat{background:var(--brand-soft);border-radius:11px;padding:12px 14px}
+  .stat .k{font-size:.72rem;color:var(--ink-soft);font-weight:700;text-transform:uppercase;letter-spacing:.02em}
+  .stat .v{font-size:1.14rem;font-weight:800;letter-spacing:-.01em;line-height:1.3;overflow-wrap:anywhere}
+  .stat .v small{font-size:.72rem;font-weight:600;color:var(--ink-soft)}
+  .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeric:tabular-nums}
+  th,td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+  th:first-child,td:first-child{text-align:left;white-space:normal;min-width:150px}
+  thead th{font-size:.72rem;color:var(--ink-soft);font-weight:700;cursor:pointer;user-select:none;
+       letter-spacing:.01em;position:sticky;top:0;background:var(--card)}
+  thead th:hover{color:var(--brand)}
+  thead th .arrow{opacity:.45;font-size:.9em}
+  tbody tr:hover{background:var(--brand-soft)}
+  .best{color:var(--brand);font-weight:800}
+  .pill{display:inline-block;font-size:.62rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;
+       background:var(--brand);color:#fff;border-radius:999px;padding:1px 6px;margin-left:6px;vertical-align:1px}
+  .muted{color:var(--ink-soft)}
+  .empty{padding:26px 10px;text-align:center;color:var(--ink-soft);font-size:.9rem}
+  .adslot{border:1px dashed var(--line);border-radius:12px;padding:14px;text-align:center;
+       color:var(--ink-soft);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;margin:16px 0;background:transparent}
+  .cta{background:linear-gradient(135deg,var(--cta-bg1),var(--cta-bg2));border:1px solid var(--brand);
+       border-radius:16px;padding:22px;margin:20px 0;box-shadow:var(--shadow)}
+  .cta-kicker{font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--brand)}
+  .cta h2{font-size:clamp(1.05rem,2.6vw,1.3rem);margin:6px 0 8px;line-height:1.3;letter-spacing:-.01em}
+  .cta p{margin:0 0 14px;font-size:.9rem;color:var(--ink-soft);max-width:62ch}
+  .cta p strong{color:var(--ink)}
+  .cta-btn{display:inline-block;background:var(--brand);color:#fff;text-decoration:none;font-weight:800;
+       padding:12px 20px;border-radius:10px;font-size:.95rem;border:1px solid var(--brand)}
+  .cta-btn:hover{background:var(--brand-2)}
+  .cta small{display:block;margin-top:10px;color:var(--ink-soft);font-size:.78rem}
+  .steps{margin:0;padding-left:20px;font-size:.9rem;color:var(--ink)}
+  .steps li{margin-bottom:6px}
+  details{border-top:1px solid var(--line);padding:10px 0}
+  details:first-of-type{border-top:none}
+  summary{cursor:pointer;font-weight:700;font-size:.9rem}
+  details p{font-size:.88rem;color:var(--ink-soft);margin:8px 0 0}
+  footer{max-width:1060px;margin:0 auto;padding:0 20px 48px;color:var(--ink-soft);font-size:.8rem}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:var(--ink);color:var(--bg);
+       padding:10px 16px;border-radius:10px;font-size:.85rem;opacity:0;pointer-events:none;transition:.2s;z-index:9;
+       max-width:90vw;text-align:center}
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+  .num-in{text-align:right}
+  @media print{.card,.cta{box-shadow:none}.row-actions,.adslot,#delete-col{display:none}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <span class="badge">Free · no sign-up · works offline</span>
+  <h1>Protein Cost Per Gram &amp; Daily Target Calculator</h1>
+  <p class="lede">Type the price, the package size and the protein on the label, and this tells you
+    <strong>what a gram of protein actually costs</strong> — then what your daily target costs per week and month.
+    The same protein can be 4× cheaper at the next shelf over. Takes 30 seconds before you shop.</p>
+</header>
+
+<main>
+  <!-- 1. Add a food -->
+  <section class="card" aria-labelledby="add-title">
+    <h2 id="add-title"><span class="num">1</span> Add a food</h2>
+    <p class="sub">Use the shelf price you actually pay and the nutrition label of that exact package.</p>
+    <form id="add-form" autocomplete="off">
+      <div class="grid">
+        <div class="field">
+          <label for="f-name">Food / product</label>
+          <input id="f-name" type="text" placeholder="Chicken breast, boneless 1 lb" required>
+        </div>
+        <div class="field">
+          <label for="f-price">Price (USD)</label>
+          <input id="f-price" class="num-in" type="number" inputmode="decimal" min="0" step="0.01" placeholder="4.99" required>
+        </div>
+        <div class="field">
+          <label for="f-size">Package size</label>
+          <div class="unitpair">
+            <input id="f-size" class="num-in" type="number" inputmode="decimal" min="0" step="0.01" placeholder="1" required>
+            <select id="f-size-unit" aria-label="Package size unit">
+              <option value="lb">lb</option>
+              <option value="oz">oz</option>
+              <option value="g" selected>g</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-kcal">Calories / 100 g</label>
+          <input id="f-kcal" class="num-in" type="number" inputmode="decimal" min="0" step="1" placeholder="120">
+        </div>
+        <div class="field">
+          <label for="f-protein">Protein (g)</label>
+          <div class="unitpair">
+            <input id="f-protein" class="num-in" type="number" inputmode="decimal" min="0" step="0.1" placeholder="23" required>
+            <select id="f-protein-basis" aria-label="Protein basis" class="narrow">
+              <option value="100g">/100 g</option>
+              <option value="serving">/serving</option>
+            </select>
+          </div>
+        </div>
+        <div class="field" id="serving-field" hidden>
+          <label for="f-serving">Serving size (g)</label>
+          <input id="f-serving" class="num-in" type="number" inputmode="decimal" min="0" step="1" placeholder="113">
+        </div>
+      </div>
+      <div class="row-actions">
+        <button class="primary" type="submit">Add to comparison</button>
+        <button type="button" id="load-preset">Load 26 US grocery presets</button>
+        <button type="button" class="ghost" id="copy-tsv">Copy table</button>
+        <button type="button" class="ghost" id="clear-all">Clear all</button>
+      </div>
+      <p class="hint">US labels show protein per serving: switch the selector to <code>/serving</code> and enter the serving size in grams
+        (e.g. 4 oz = 113 g), or leave it on <code>/100 g</code> if the label lists 100 g values.
+        Calories are optional — they only drive the protein-calorie share column.</p>
+    </form>
+  </section>
+
+  <!-- AdSense: paste your ad unit here after approval. -->
+  <div class="adslot" aria-hidden="true">Advertisement</div>
+
+  <!-- 2. Daily target -->
+  <section class="card" aria-labelledby="goal-title">
+    <h2 id="goal-title"><span class="num">2</span> Your daily protein target</h2>
+    <p class="sub">Set it by hand, or get a range from your bodyweight and how you train.</p>
+    <div class="target-bar">
+      <label for="f-target" style="margin:0;text-transform:none;font-size:.88rem;color:var(--ink)">Target</label>
+      <input id="f-target" class="num-in" type="number" min="10" max="400" step="5" value="150" aria-label="Daily protein target in grams">
+      <span class="muted">g / day</span>
+      <div class="chips" id="target-chips"></div>
+    </div>
+    <div class="target-bar" style="margin-bottom:6px">
+      <span class="muted" style="font-size:.85rem">Suggest from bodyweight:</span>
+      <div class="unitpair" style="max-width:190px">
+        <input id="f-weight" class="num-in" type="number" inputmode="decimal" min="0" step="1" placeholder="180" aria-label="Bodyweight">
+        <select id="f-weight-unit" class="narrow" aria-label="Bodyweight unit">
+          <option value="lb" selected>lb</option>
+          <option value="kg">kg</option>
+        </select>
+      </div>
+      <select id="f-level" style="max-width:230px" aria-label="Training goal">
+        <option value="light">Lightly active / general health</option>
+        <option value="active" selected>Training 3–4× a week</option>
+        <option value="build">Building muscle, 5+× a week</option>
+        <option value="cut">Cutting, keeping muscle</option>
+      </select>
+      <button type="button" id="suggest-btn">Get range</button>
+      <span id="suggest-out" class="muted" style="font-size:.87rem"></span>
+    </div>
+    <div class="stats" id="stats" style="margin-top:14px"></div>
+  </section>
+
+  <!-- 3. Ranking -->
+  <section class="card" aria-labelledby="list-title">
+    <h2 id="list-title"><span class="num">3</span> Cheapest protein first</h2>
+    <p class="sub">Click any column header to re-sort. The cheapest option for your target is highlighted.</p>
+    <div class="row-actions" style="margin:0 0 10px">
+      <span class="muted" style="font-size:.82rem">Price column units:</span>
+      <div class="chips" id="display-units"></div>
+    </div>
+    <div class="scroll">
+      <table id="tbl">
+        <thead>
+          <tr>
+            <th data-sort="name">Food</th>
+            <th data-sort="price">Price</th>
+            <th data-sort="grams">Size</th>
+            <th data-sort="costPerDisplay" id="th-cost">Cost / 100 g</th>
+            <th data-sort="costPerGProtein">Cost / g protein</th>
+            <th data-sort="proteinPerDollar">Protein per $1</th>
+            <th data-sort="proteinShare">Protein kcal</th>
+            <th data-sort="costToTarget">Cost for target</th>
+            <th id="delete-col"></th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="empty">Nothing here yet — add a food above, or load the 26 US grocery presets to see how it works.</div>
+    <p class="hint"><strong>Cost per gram of protein</strong> is the number that decides the purchase: lowest wins.
+      <strong>Protein per $1</strong> says the same thing upside down (higher is better) and is easier to compare with a budget.
+      <strong>Protein kcal</strong> is the share of that food's calories that come from protein — chicken breast is about 77%, whole milk about 22%,
+      peanut butter about 17% — so you can see how much filler you buy along with the protein.</p>
+  </section>
+
+  <!-- CTA: Gumroad funnel -->
+  <section class="cta" id="gumroad-cta" aria-labelledby="cta-title">
+    <span class="cta-kicker">One calculation is not a meal plan</span>
+    <h2 id="cta-title">Need a full 7-day meal planner + auto grocery list?</h2>
+    <p>Get the <strong>Excel Calculator</strong>: 11 high-protein recipes with cost per gram already wired in,
+      a Monday–Sunday meal plan, and a grocery list that turns the week into packs to buy, cost and leftovers.
+      <strong>$12</strong> — launch code <code>LAUNCH25</code> takes 25% off.</p>
+    <a class="cta-btn" id="gumroad-link" href="https://rwg4002.gumroad.com/l/high-protein-meal-prep-calculator"
+       target="_blank" rel="noopener">Get the Excel Calculator — $12 →</a>
+    <small>One-time purchase · Excel 2016+ or Google Sheets · every formula unlocked and editable</small>
+  </section>
+
+  <!-- AdSense: second slot. Paste your ad unit here after approval. -->
+  <div class="adslot" aria-hidden="true">Advertisement</div>
+
+  <section class="card">
+    <h2>How to use it</h2>
+    <ol class="steps">
+      <li><strong>Shop with the calculator open.</strong> Enter 5–8 things you actually buy this week, then sort by cost per gram of protein.
+        Chicken breast, eggs, canned tuna, Greek yogurt, milk and whey usually land at the top; cheese, protein bars and nuts at the bottom.</li>
+      <li><strong>Read “Cost for target” as a ceiling.</strong> It is what your whole day would cost on that one food. Real meals mix two or three of the cheapest,
+        so your true daily cost sits near that number, not above it.</li>
+      <li><strong>Check protein kcal when you are cutting.</strong> A food can be cheap protein but carry a lot of fat or carbs with it — that column shows the trade.</li>
+      <li><strong>Prices stick in your browser only.</strong> Everything is stored in localStorage on this device. Nothing is uploaded, no account, no cookies from us.</li>
+    </ol>
+  </section>
+
+  <section class="card">
+    <h2>Questions</h2>
+    <details open><summary>What counts as “cheap protein”?</summary>
+      <p>In 2026 US prices, anything under about 3¢ per gram of protein ($0.03/g) is cheap: eggs, chicken breast on sale, canned tuna, milk, dry lentils, whey bought in bulk.
+        Above 6¢ per gram you are paying for convenience, a brand, or a bar-shaped package.</p></details>
+    <details><summary>How much protein do I actually need?</summary>
+      <p>Around 0.8 g per kg of bodyweight is the minimum for health; 1.6–2.2 g per kg supports muscle building when you train, and up to 2.4 g per kg helps keep muscle while cutting.
+        The suggester above uses those ranges. More than that is not harmful for healthy kidneys, it is just expensive.</p></details>
+    <details><summary>My label says “protein 24 g per 4 oz serving”. What do I type?</summary>
+      <p>Switch the protein selector to <code>/serving</code>, type 24, and put the serving size in the serving-size box: 4 oz = 113 g. The calculator converts everything to cost per gram of protein,
+        so mixing labels that use servings with ones that use 100 g works fine.</p></details>
+    <details><summary>Does it handle pounds and ounces?</summary>
+      <p>Yes — package size accepts lb, oz or g, and the price column can be shown per 100 g, per lb or per oz. The math uses 1 lb = 453.59 g and 1 oz = 28.35 g.</p></details>
+    <details><summary>Where do the 26 presets come from?</summary>
+      <p>They are realistic 2026 US retail prices and label values for common groceries — a starting point to compare against, not receipts.
+        Overwrite them with your own prices; the value is the comparison, not our guesses.</p></details>
+  </section>
+</main>
+
+<footer>
+  <p>Prices and nutrition values are the ones you enter. Results are estimates for planning, not medical or dietary advice.
+     Protein needs vary with bodyweight, training and health — check with a doctor or dietitian if you are unsure.</p>
+  <p class="muted">No tracking, no sign-up. Your list is saved only in this browser.</p>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* PURE_LOGIC_START */
+/* ---------------------------------------------------------------
+   Sellable funnel target. Leave empty ("") to keep the CTA as a
+   "coming soon" notice; set it to the live Gumroad product URL to
+   turn the CTA button into a real checkout link.
+   --------------------------------------------------------------- */
+var GUMROAD_URL = "https://rwg4002.gumroad.com/l/high-protein-meal-prep-calculator";
+
+var UNIT_GRAMS = { g: 1, oz: 28.349523125, lb: 453.59237 };
+var TARGET_PRESETS = [100, 120, 150, 180, 200];
+var TARGET_FACTORS = {
+  light:  [0.8, 1.2],   // general health, little training
+  active: [1.4, 1.8],   // training 3-4x a week
+  build:  [1.8, 2.2],   // building muscle
+  cut:    [2.0, 2.4]    // cutting while keeping muscle
+};
+
+/* 26 US grocery presets: price in USD, size in the given unit, protein and kcal per 100 g. */
+var PRESETS = [
+  {name:"Chicken breast, boneless skinless", price:4.99,  size:1,    unit:"lb", protein:23,   kcal:120},
+  {name:"Chicken thighs, boneless",          price:3.49,  size:1,    unit:"lb", protein:19,   kcal:150},
+  {name:"Ground beef 90/10",                 price:6.49,  size:1,    unit:"lb", protein:19,   kcal:176},
+  {name:"Ground turkey 93/7",                price:5.49,  size:1,    unit:"lb", protein:18,   kcal:170},
+  {name:"Eggs, large (dozen)",               price:3.29,  size:600,  unit:"g",  protein:13,   kcal:143},
+  {name:"Egg whites, carton 32 oz",          price:4.49,  size:32,   unit:"oz", protein:11,   kcal:52},
+  {name:"Greek yogurt, plain nonfat 32 oz",  price:5.99,  size:32,   unit:"oz", protein:10,   kcal:59},
+  {name:"Cottage cheese 2% 16 oz",           price:4.29,  size:16,   unit:"oz", protein:11,   kcal:81},
+  {name:"Mozzarella, part-skim 8 oz",        price:3.99,  size:8,    unit:"oz", protein:24,   kcal:280},
+  {name:"Milk, whole (1 gallon)",            price:3.79,  size:3785, unit:"g",  protein:3.3,  kcal:61},
+  {name:"Whey protein powder 5 lb",          price:54.99, size:5,    unit:"lb", protein:75,   kcal:380},
+  {name:"Protein bar (60 g)",                price:2.49,  size:60,   unit:"g",  protein:33,   kcal:350},
+  {name:"Protein shake, ready to drink 14 oz", price:3.29, size:414, unit:"g",  protein:6.3,  kcal:41},
+  {name:"Canned tuna in water 5 oz",         price:1.29,  size:5,    unit:"oz", protein:24,   kcal:116},
+  {name:"Salmon fillet, fresh",              price:9.99,  size:1,    unit:"lb", protein:20,   kcal:208},
+  {name:"Tilapia fillets, frozen",           price:3.99,  size:1,    unit:"lb", protein:20,   kcal:96},
+  {name:"Tofu, extra firm 14 oz",            price:2.49,  size:14,   unit:"oz", protein:11,   kcal:88},
+  {name:"Tempeh 8 oz",                       price:3.49,  size:8,    unit:"oz", protein:20,   kcal:195},
+  {name:"Black beans, canned 15 oz",         price:1.09,  size:15,   unit:"oz", protein:6.9,  kcal:91},
+  {name:"Lentils, dry",                      price:2.29,  size:1,    unit:"lb", protein:25,   kcal:352},
+  {name:"Rolled oats 42 oz",                 price:4.49,  size:42,   unit:"oz", protein:13.5, kcal:379},
+  {name:"Brown rice, dry 2 lb",              price:3.29,  size:2,    unit:"lb", protein:7.5,  kcal:360},
+  {name:"Pasta, dry",                        price:1.49,  size:1,    unit:"lb", protein:12.5, kcal:371},
+  {name:"Peanut butter 16 oz",               price:3.99,  size:16,   unit:"oz", protein:25,   kcal:588},
+  {name:"Almonds 16 oz",                     price:7.99,  size:16,   unit:"oz", protein:21,   kcal:579},
+  {name:"Broccoli, frozen 12 oz",            price:2.29,  size:12,   unit:"oz", protein:2.8,  kcal:34}
+];
+
+/* "4.99", "$4.99", "1,299", " 24 g " -> number. NaN when it is not a number. */
+function toNumber(value) {
+  if (value === null || value === undefined || value === "") return NaN;
+  if (typeof value === "number") return isFinite(value) ? value : NaN;
+  var cleaned = String(value).replace(/[$,\s]/g, "").replace(/(usd|lb|lbs|oz|g|kcal)$/i, "");
+  if (cleaned === "") return NaN;
+  var n = parseFloat(cleaned);
+  return isFinite(n) ? n : NaN;
+}
+
+/* Package size in grams. lb -> 453.59237 g, oz -> 28.3495 g. NaN if unusable. */
+function toGrams(size, unit) {
+  var n = toNumber(size);
+  var factor = UNIT_GRAMS[String(unit || "g").toLowerCase()];
+  if (!isFinite(n) || n <= 0 || !factor) return NaN;
+  return n * factor;
+}
+
+/* Protein grams per 100 g of the product, whichever basis the label used. */
+function proteinPer100g(item) {
+  var p = toNumber(item.protein);
+  if (!isFinite(p) || p < 0) return NaN;
+  if (item.basis === "serving") {
+    var serving = toNumber(item.servingSize);
+    if (!isFinite(serving) || serving <= 0) return NaN;
+    return p / serving * 100;
+  }
+  return p;
+}
+
+/**
+ * One food's metrics. Values that cannot be computed are null.
+ * targetG is the daily protein target in grams.
+ */
+function calcRow(item, targetG) {
+  var price = toNumber(item.price);
+  var grams = toGrams(item.size, item.unit);
+  var p100 = proteinPer100g(item);
+  var kcal = toNumber(item.kcal);
+  var row = {
+    name: String(item.name || "").trim(),
+    price: price, grams: grams, protein: p100, kcal: kcal,
+    costPer100g: null, costPerGProtein: null, proteinPerDollar: null,
+    proteinShare: null, gramsForTarget: null, costToTarget: null, kcalForTarget: null,
+    proteinForTarget: null, basis: item.basis || "100g"
+  };
+  if (!isFinite(price) || price < 0 || !isFinite(grams) || grams <= 0) return row;
+  row.costPer100g = price / grams * 100;
+
+  var totalProtein = grams * p100 / 100;                 // grams of protein in the package
+  if (isFinite(p100) && p100 > 0) {
+    row.proteinForTarget = totalProtein;
+    row.costPerGProtein = price / totalProtein;
+    row.proteinPerDollar = totalProtein / price;
+    var goal = toNumber(targetG);
+    if (isFinite(goal) && goal > 0) {
+      row.gramsForTarget = goal * 100 / p100;            // grams of food that deliver the target
+      row.costToTarget = row.gramsForTarget * price / grams;
+      if (isFinite(kcal) && kcal > 0) row.kcalForTarget = row.gramsForTarget * kcal / 100;
+    }
+  }
+  if (isFinite(kcal) && kcal > 0 && isFinite(p100)) row.proteinShare = p100 * 4 / kcal;
+  return row;
+}
+
+/* Cost of one reportable unit: "100g" | "lb" | "oz" — what the price column shows.
+   Ordering is the same for every unit (the factor is constant), so sorting by any
+   of them gives the same ranking. */
+function costPerUnit(row, unit) {
+  if (!row || !isFinite(row.price) || !isFinite(row.grams) || row.grams <= 0) return null;
+  var key = String(unit || "100g").toLowerCase();
+  if (key === "100g" || key === "g100") return row.price / row.grams * 100;
+  var f = UNIT_GRAMS[key];
+  if (!f) return null;
+  return row.price / row.grams * f;
+}
+
+/* Ascending by default; rows without a value always sink to the bottom. */
+function rankRows(items, targetG, sortKey, dir) {
+  var rows = (items || []).map(function (it) { return calcRow(it, targetG); });
+  var key = sortKey || "costPerGProtein";
+  var ascending = dir !== "desc";
+  rows.sort(function (a, b) {
+    if (key === "name") return ascending ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+    var av = a[key], bv = b[key];
+    var aNull = (av === null || av === undefined || !isFinite(av));
+    var bNull = (bv === null || bv === undefined || !isFinite(bv));
+    if (aNull && bNull) return a.name.localeCompare(b.name);
+    if (aNull) return 1;
+    if (bNull) return -1;
+    if (av === bv) return a.name.localeCompare(b.name);
+    return ascending ? av - bv : bv - av;
+  });
+  return rows;
+}
+
+/** Summary: cheapest, priciest, spread, median, and what the target costs per day/week/month. */
+function summary(items, targetG) {
+  var rows = rankRows(items, targetG).filter(function (r) { return r.costPerGProtein !== null; });
+  var out = {count: rows.length, cheapest: null, priciest: null, median: null,
+             spread: null, dailyCost: null, weeklyCost: null, monthlyCost: null};
+  if (!rows.length) return out;
+  out.cheapest = rows[0];
+  out.priciest = rows[rows.length - 1];
+  var mid = Math.floor(rows.length / 2);
+  out.median = rows.length % 2
+    ? rows[mid].costPerGProtein
+    : (rows[mid - 1].costPerGProtein + rows[mid].costPerGProtein) / 2;
+  out.spread = out.cheapest.costPerGProtein > 0 ? out.priciest.costPerGProtein / out.cheapest.costPerGProtein : null;
+  var goal = toNumber(targetG);
+  if (isFinite(goal) && goal > 0) {
+    out.dailyCost = out.cheapest.costPerGProtein * goal;
+    out.weeklyCost = out.dailyCost * 7;
+    out.monthlyCost = out.dailyCost * 30;
+  }
+  return out;
+}
+
+/* Suggested daily target range in grams from bodyweight (lb or kg) and training goal. */
+function suggestTarget(weight, unit, level) {
+  var w = toNumber(weight);
+  if (!isFinite(w) || w <= 0) return null;
+  var kg = String(unit).toLowerCase() === "kg" ? w : w / 2.2046226218;
+  var f = TARGET_FACTORS[level] || TARGET_FACTORS.active;
+  var low = Math.round(kg * f[0]);
+  var high = Math.round(kg * f[1]);
+  return {kg: kg, low: low, high: high, mid: Math.round((low + high) / 2)};
+}
+
+/* ---------- formatting ---------- */
+function groupDigits(n, digits) {
+  return Number(n).toFixed(digits).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+function formatNum(n, digits) {
+  if (n === null || n === undefined || !isFinite(n)) return "—";
+  return groupDigits(n, digits === undefined ? 0 : digits);
+}
+/* Money with a sensible number of decimals: $54.99, $0.023, $1.4k stays plain. */
+function formatUSD(n) {
+  if (n === null || n === undefined || !isFinite(n)) return "—";
+  var d = Math.abs(n) >= 10 ? 2 : (Math.abs(n) >= 1 ? 2 : 3);
+  return "$" + groupDigits(n, d);
+}
+/* Cents per gram of protein — the number people quote in forums (2.3¢/g). */
+function formatCents(n) {
+  if (n === null || n === undefined || !isFinite(n)) return "—";
+  return groupDigits(n * 100, n * 100 >= 10 ? 1 : 2) + "¢";
+}
+function formatPct(n) {
+  if (n === null || n === undefined || !isFinite(n)) return "—";
+  return Math.round(n * 100) + "%";
+}
+/* 113 g of food, shown in the unit the user typed (1 lb reads better than 454 g). */
+function formatSize(grams) {
+  if (!isFinite(grams)) return "—";
+  if (grams >= 453.59237) return formatNum(grams / UNIT_GRAMS.lb, 2) + " lb";
+  if (grams >= 28.349523125) return formatNum(grams / UNIT_GRAMS.oz, 2) + " oz";
+  return formatNum(grams, 0) + " g";
+}
+function formatGrams(n) {
+  if (n === null || n === undefined || !isFinite(n)) return "—";
+  return formatNum(n, n >= 100 ? 0 : 1) + " g";
+}
+
+/* Tab-separated table for pasting into Excel / Google Sheets. */
+function toTSV(rows, unit) {
+  var u = unit || "100g";
+  var unitLabel = u === "lb" ? "/lb" : (u === "oz" ? "/oz" : "/100 g");
+  var head = ["Food", "Price (USD)", "Size (g)", "Cost " + unitLabel, "Cost per g protein",
+              "Protein per $1", "Protein kcal share", "Cost for target"];
+  var lines = [head.join("\t")];
+  (rows || []).forEach(function (r) {
+    var cpu = costPerUnit(r, u);
+    lines.push([
+      r.name,
+      isFinite(r.price) ? groupDigits(r.price, 2) : "",
+      isFinite(r.grams) ? Math.round(r.grams) : "",
+      cpu === null ? "" : groupDigits(cpu, cpu >= 1 ? 2 : 3),
+      r.costPerGProtein === null ? "" : groupDigits(r.costPerGProtein, 3),
+      r.proteinPerDollar === null ? "" : groupDigits(r.proteinPerDollar, 1),
+      r.proteinShare === null ? "" : Math.round(r.proteinShare * 100) + "%",
+      r.costToTarget === null ? "" : groupDigits(r.costToTarget, 2)
+    ].join("\t"));
+  });
+  return lines.join("\n");
+}
+/* PURE_LOGIC_END */
+
+/* ================================ UI ===================================== */
+var STORE_KEY = "protein-cost-calc-en-v1";
+var state = {
+  items: [],
+  target: 150,
+  sortKey: "costPerGProtein",
+  dir: "asc",
+  displayUnit: "100g"
+};
+
+function $(sel) { return document.querySelector(sel); }
+function toast(msg) {
+  var t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(t._h);
+  t._h = setTimeout(function () { t.classList.remove("show"); }, 2200);
+}
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c];
+  });
+}
+function save() {
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify({
+      items: state.items, target: state.target, displayUnit: state.displayUnit
+    }));
+  } catch (e) { /* private mode / quota — the tool still works without saving */ }
+}
+function load() {
+  try {
+    var raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return;
+    var data = JSON.parse(raw);
+    if (Array.isArray(data.items)) {
+      state.items = data.items.filter(function (it) { return it && typeof it === "object" && it.name; });
+    }
+    if (isFinite(data.target) && data.target > 0) state.target = data.target;
+    if (data.displayUnit === "lb" || data.displayUnit === "oz" || data.displayUnit === "100g") {
+      state.displayUnit = data.displayUnit;
+    }
+  } catch (e) { /* ignore corrupted storage */ }
+}
+
+/* ---------- target chips + unit chips ---------- */
+function renderChips() {
+  var box = $("#target-chips");
+  box.innerHTML = "";
+  TARGET_PRESETS.forEach(function (v) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.textContent = v + " g";
+    b.setAttribute("aria-label", "Set target to " + v + " grams");
+    b.addEventListener("click", function () {
+      state.target = v;
+      $("#f-target").value = v;
+      save(); render();
+    });
+    box.appendChild(b);
+  });
+  var ub = $("#display-units");
+  ub.innerHTML = "";
+  [["100g", "per 100 g"], ["lb", "per lb"], ["oz", "per oz"]].forEach(function (pair) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.textContent = pair[1];
+    if (state.displayUnit === pair[0]) b.classList.add("primary");
+    b.addEventListener("click", function () {
+      state.displayUnit = pair[0];
+      save(); renderChips(); render();
+    });
+    ub.appendChild(b);
+  });
+  $("#th-cost").innerHTML = "Cost / " + (state.displayUnit === "100g" ? "100 g" : state.displayUnit) +
+    ' <span class="arrow">↕</span>';
+}
+
+/* ---------- summary tiles ---------- */
+function renderStats() {
+  var s = summary(state.items, state.target);
+  var box = $("#stats");
+  if (!s.count) {
+    box.innerHTML = '<div class="stat"><div class="k">Foods compared</div><div class="v">0<small> foods</small></div></div>';
+    return;
+  }
+  var daily = formatUSD(s.dailyCost);
+  var gramsPerDollar = s.cheapest.proteinPerDollar;
+  box.innerHTML =
+    '<div class="stat"><div class="k">Cheapest protein</div><div class="v">' + escapeHtml(s.cheapest.name) +
+      '<br><small>' + formatCents(s.cheapest.costPerGProtein) + '/g · ' + formatGrams(gramsPerDollar) + ' per $1</small></div></div>' +
+    '<div class="stat"><div class="k">Most expensive</div><div class="v">' + escapeHtml(s.priciest.name) +
+      '<br><small>' + formatCents(s.priciest.costPerGProtein) + '/g</small></div></div>' +
+    '<div class="stat"><div class="k">Cheapest vs priciest</div><div class="v">' +
+      (s.spread === null ? "—" : formatNum(s.spread, 1) + "×") + '<small> difference</small></div></div>' +
+    '<div class="stat"><div class="k">' + formatNum(state.target) + ' g a day, cheapest way</div><div class="v">' + daily +
+      '<small> / day</small><br><small>' + formatUSD(s.weeklyCost) + ' / week · ' + formatUSD(s.monthlyCost) + ' / month</small></div></div>';
+}
+
+/* ---------- table ---------- */
+function render() {
+  var rows = rankRows(state.items, state.target, state.sortKey, state.dir);
+  var tbody = $("#tbody");
+  tbody.innerHTML = "";
+  $("#empty").style.display = rows.length ? "none" : "block";
+
+  var valid = rankRows(state.items, state.target).filter(function (r) { return r.costPerGProtein !== null; });
+  var bestName = valid.length ? valid[0].name + "|" + valid[0].price + "|" + valid[0].grams : null;
+
+  rows.forEach(function (r, idx) {
+    var tr = document.createElement("tr");
+    var isBest = bestName && (r.name + "|" + r.price + "|" + r.grams) === bestName;
+    var cpu = costPerUnit(r, state.displayUnit);
+    tr.innerHTML =
+      "<td>" + escapeHtml(r.name) + (isBest ? '<span class="pill">best</span>' : "") + "</td>" +
+      "<td>" + formatUSD(r.price) + "</td>" +
+      "<td>" + formatSize(r.grams) + "</td>" +
+      "<td>" + (cpu === null ? "—" : formatUSD(cpu)) + "</td>" +
+      '<td class="' + (isBest ? "best" : "") + '">' +
+        (r.costPerGProtein === null ? "—" : formatCents(r.costPerGProtein)) + "</td>" +
+      "<td>" + formatGrams(r.proteinPerDollar) + "</td>" +
+      "<td>" + formatPct(r.proteinShare) + "</td>" +
+      "<td>" + formatUSD(r.costToTarget) + "</td>" +
+      '<td><button class="tiny ghost" data-del="' + idx + '" aria-label="Remove ' + escapeHtml(r.name) + '">✕</button></td>';
+    tbody.appendChild(tr);
+  });
+
+  Array.prototype.forEach.call(tbody.querySelectorAll("[data-del]"), function (btn) {
+    btn.addEventListener("click", function () {
+      var shown = rows[Number(btn.getAttribute("data-del"))];
+      var i = state.items.findIndex(function (it) {
+        return it.name === shown.name && toNumber(it.price) === shown.price;
+      });
+      if (i >= 0) { state.items.splice(i, 1); save(); render(); toast("Removed"); }
+    });
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll("th[data-sort]"), function (th) {
+    if (th._bound) return;
+    th._bound = true;
+    th.addEventListener("click", function () {
+      var key = th.getAttribute("data-sort");
+      if (key === "costPerDisplay") key = "costPer100g";   // same order for every unit
+      if (state.sortKey === key) state.dir = state.dir === "asc" ? "desc" : "asc";
+      else {
+        state.sortKey = key;
+        state.dir = (key === "costPerGProtein" || key === "costPer100g") ? "asc" : "desc";
+      }
+      render();
+    });
+  });
+
+  renderStats();
+}
+
+/* ---------- form wiring ---------- */
+function syncProteinFields() {
+  $("#serving-field").hidden = $("#f-protein-basis").value !== "serving";
+}
+$("#f-protein-basis").addEventListener("change", syncProteinFields);
+
+$("#add-form").addEventListener("submit", function (e) {
+  e.preventDefault();
+  var basis = $("#f-protein-basis").value;
+  var item = {
+    name: $("#f-name").value.trim(),
+    price: toNumber($("#f-price").value),
+    size: toNumber($("#f-size").value),
+    unit: $("#f-size-unit").value,
+    protein: toNumber($("#f-protein").value),
+    basis: basis,
+    kcal: toNumber($("#f-kcal").value)
+  };
+  if (basis === "serving") item.servingSize = toNumber($("#f-serving").value);
+  if (!item.name) return toast("Give the food a name first");
+  if (!isFinite(item.price) || item.price < 0) return toast("Check the price");
+  if (!isFinite(item.size) || item.size <= 0) return toast("Check the package size");
+  if (!isFinite(item.protein) || item.protein < 0) return toast("Check the protein grams");
+  if (basis === "serving" && (!isFinite(item.servingSize) || item.servingSize <= 0)) {
+    return toast("Serving size in grams is needed for a per-serving label");
+  }
+  state.items.push(item);
+  save(); render();
+  this.reset();
+  $("#f-size-unit").value = "g";
+  $("#f-protein-basis").value = "100g";
+  syncProteinFields();
+  $("#f-name").focus();
+  toast(item.name + " added");
+});
+
+$("#f-target").addEventListener("input", function () {
+  var v = toNumber(this.value);
+  state.target = (isFinite(v) && v > 0) ? v : 150;
+  if (!(isFinite(v) && v > 0)) this.value = 150;
+  save(); render();
+});
+
+$("#suggest-btn").addEventListener("click", function () {
+  var s = suggestTarget($("#f-weight").value, $("#f-weight-unit").value, $("#f-level").value);
+  var out = $("#suggest-out");
+  if (!s) { out.textContent = "Enter your bodyweight first."; return; }
+  out.innerHTML = "Suggested: <strong>" + s.low + "–" + s.high + " g</strong> (mid " + s.mid + " g) " +
+    '<button type="button" class="tiny" id="use-suggest">Use ' + s.mid + " g</button>";
+  var use = $("#use-suggest");
+  if (use) use.addEventListener("click", function () {
+    state.target = s.mid;
+    $("#f-target").value = s.mid;
+    save(); render();
+    toast("Target set to " + s.mid + " g");
+  });
+});
+
+$("#load-preset").addEventListener("click", function () {
+  var existing = {};
+  state.items.forEach(function (it) { existing[String(it.name).toLowerCase()] = true; });
+  var added = 0;
+  PRESETS.forEach(function (p) {
+    if (!existing[String(p.name).toLowerCase()]) {
+      state.items.push({
+        name: p.name, price: p.price, size: p.size, unit: p.unit,
+        protein: p.protein, basis: "100g", kcal: p.kcal, preset: true
+      });
+      added++;
+    }
+  });
+  save(); render();
+  toast(added ? added + " presets loaded (" + state.items.length + " foods)" : "All presets are already in the list");
+});
+
+$("#clear-all").addEventListener("click", function () {
+  if (!state.items.length) return;
+  if (!confirm("Remove all " + state.items.length + " foods from this comparison?")) return;
+  state.items = []; save(); render(); toast("Cleared");
+});
+
+$("#copy-tsv").addEventListener("click", function () {
+  var rows = rankRows(state.items, state.target, state.sortKey, state.dir);
+  if (!rows.length) return toast("Nothing to copy yet");
+  var text = toTSV(rows, state.displayUnit);
+  function done() { toast("Table copied — paste it into Excel or Sheets"); }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done, function () { fallbackCopy(text, done); });
+  } else { fallbackCopy(text, done); }
+});
+function fallbackCopy(text, done) {
+  var ta = document.createElement("textarea");
+  ta.value = text;
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand("copy"); done(); }
+  catch (e) { toast("Copy blocked — select the table and copy manually"); }
+  document.body.removeChild(ta);
+}
+
+/* ---------- CTA ---------- */
+(function wireCta() {
+  var a = $("#gumroad-link");
+  if (GUMROAD_URL) {
+    a.href = GUMROAD_URL;
+  } else {
+    a.href = "#gumroad-link";
+    a.addEventListener("click", function (e) {
+      e.preventDefault();
+      toast("The Gumroad checkout opens shortly — $12, and LAUNCH25 takes 25% off.");
+    });
+  }
+})();
+
+/* ---------- boot ---------- */
+load();
+$("#f-target").value = state.target;
+renderChips();
+syncProteinFields();
+render();
+</script>
+</body>
+</html>
